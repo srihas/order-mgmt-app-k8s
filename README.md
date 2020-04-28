@@ -110,3 +110,5 @@ In case of Rabbitmq, ingress can be created post which web-ui can be accessed wi
 ## Thanks
 * [tscharts](https://github.com/technosophos/tscharts)
 * [bitnami - Create a Helm chart](https://youtu.be/TJ9hPLn0oAs)
+* [minikube - loadbalancer](https://blog.codonomics.com/2019/02/loadbalancer-support-with-minikube-for-k8s.html)
+* [markdown - live preview](https://markdownlivepreview.com/)
