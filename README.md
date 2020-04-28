@@ -26,7 +26,7 @@ This is a sample microservices based application developed in java using Spring 
 ----
 ## Deploying the applications
 
-Create a kubernetes namespace to deploy services in:
+Create a kubernetes namespace to deploy services:
 
     kubectl create namespace orderapp
 
@@ -51,8 +51,8 @@ Deploy Shipping-service:
     helm install shipping-service srcharts/shipping-service -n orderapp
 
 ----
-##Verify status 
-###Local deployment (Minikube) 
+## Verify status 
+### Local deployment (Minikube) 
 
     → minikube service list
 |-------------|-------------------|---------------------|--------------------------------|
@@ -68,24 +68,24 @@ Deploy Shipping-service:
 | orderapp    | shipping-service  | No node port        |
 |-------------|-------------------|---------------------|--------------------------------|
 
-####Service URL's:
+### Service URL's:
 
-####inventory-service:
+#### inventory-service:
 
 * swagger-url: `http://192.168.99.102:30702/swagger-ui.html`
 * api-endpoint: `http://192.168.99.102:30702/inventory/`
 
-####Order-service:
+#### order-service:
 
 * swagger-url: `http://192.168.99.102:32115/swagger-ui.html`
 * api-endpoint: `http://192.168.99.102:32115/orders/` 
 
-####RabbitMQ:
+#### rabbitmq:
 
 * web-ui: `http://192.168.99.102:31672/`
 * credentials: `guest/guest`
 
-####Postgres:
+#### postgres:
 
 * Credentials:
 * ip: `192.168.99.102`
@@ -95,7 +95,7 @@ Deploy Shipping-service:
 * password: `admin123`
 
 ----
-###Google Cloud Console
+### Google Cloud Console
 
 The hostname and port details for each service can be obtained from "Service & Ingress" section in Kubernetes Engine.
 
