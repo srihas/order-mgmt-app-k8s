@@ -1,23 +1,112 @@
-Problem statement of Order management system using micro service architecture and deploy in minikube/Docker for MAC environment using docker and kubernetes tools
+Inventory & Order management microservices based application deployable on Kubernetes - Local(Minikube) and Google cloud
+----
 
-   1. Add the products to Inventory using REST API. (Persist in DB)
-   2. Should be able to take the order based on the product availability in Inventory and generate the invoice using REST API
-   3. Once the invoice is generated post the Order to Shipping service using message broker like Kafka/Rabbit MQ
+This is a sample microservices based application developed in java using Spring boot framework to demonstrate 
 
-
-Help me to Deploy:
-	1- copy Order-Management-microservice in local workspace
-	2- run the shell script Order-Management-microservice/rabbitmq/make_rabbitmq_up.sh
-	3- run the shell script Order-Management-microservice/postgres/make_postgres_up.sh
-	4- run the shell script Order-Management-microservice/inventory-service/build_and_run_inventory_service.sh
-	5- run the shell script Order-Management-microservice/order-service/build_and_run_order_service.sh
-	6- run the shell sript Order-Management-microservice/shipping-service/build_and_run_shipping_service.sh
-
-Post script run: rabbitMQ, postgres, inventory-service, order-service and shipping-service will up and running.
-
-To access swagger of inventory-service, use http://localhost:30200/swagger-ui.html
-To access swagger of order-service, use     http://localhost:30300/swagger-ui.html
-
-Note: Shipping service will get notification once invoice is ready. the message for shipping will display in console.
+* Interaction between different microservices.
+* Usage of helm to deploy microservices in Kubernetes cluster - Local(minikube) and on Google cloud.
 
 
+----
+## Tags
+
+`Spring Boot`
+`RabbitMQ`
+`Postgres`
+`Helm`
+`Kubernetes`
+`minikube`
+
+----
+## Usecase:
+
+   * User should be able to add the products to Inventory using REST API. (Persist in DB)
+   2. User should be able to take the order based on the product availability in Inventory and generate the invoice using REST API
+   3. Once any invoice is generated post the Order to Shipping service using message broker Rabbit MQ
+----
+## Deploying the applications
+
+Create a kubernetes namespace to deploy services in:
+
+    kubectl create namespace orderapp
+
+ Deploy rabbitmq:
+ 
+    helm install rabbitmq srcharts/rabbitmq -n orderapp
+
+ Deploy postgres:
+    
+    helm install postgresdb srcharts/postgres -n orderapp
+
+Deploy Inventory-service:
+
+    helm install inventory-service srcharts/inventory-service -n orderapp
+
+Deploy Order-service:
+
+    helm install order-service srcharts/order-service -n orderapp
+
+Deploy Shipping-service:
+
+    helm install shipping-service srcharts/shipping-service -n orderapp
+
+----
+##Verify status 
+###Local deployment (Minikube) 
+
+    → minikube service list
+|-------------|-------------------|---------------------|--------------------------------|
+|  NAMESPACE  |       NAME        |     TARGET PORT     |              URL               |
+|-------------|-------------------|---------------------|--------------------------------|
+| default     | kubernetes        | No node port        |
+| kube-system | kube-dns          | No node port        |
+| orderapp    | inventory-service |                9200 | http://192.168.99.102:30702    |
+| orderapp    | order-service     |                9300 | http://192.168.99.102:32115    |
+| orderapp    | postgresdb        |                5432 | http://192.168.99.102:30544    |
+| orderapp    | rabbitmq          | amqp/5672           | http://192.168.99.102:30672    |
+|             |                   | http/15672          | http://192.168.99.102:31672    |
+| orderapp    | shipping-service  | No node port        |
+|-------------|-------------------|---------------------|--------------------------------|
+
+####Service URL's:
+
+####inventory-service:
+
+* swagger-url: `http://192.168.99.102:30702/swagger-ui.html`
+* api-endpoint: `http://192.168.99.102:30702/inventory/`
+
+####Order-service:
+
+* swagger-url: `http://192.168.99.102:32115/swagger-ui.html`
+* api-endpoint: `http://192.168.99.102:32115/orders/` 
+
+####RabbitMQ:
+
+* web-ui: `http://192.168.99.102:31672/`
+* credentials: `guest/guest`
+
+####Postgres:
+
+* Credentials:
+* ip: `192.168.99.102`
+* port: `30544`
+* database: `postgresdb`
+* username: `postgresadmin`
+* password: `admin123`
+
+----
+###Google Cloud Console
+
+The hostname and port details for each service can be obtained from "Service & Ingress" section in Kubernetes Engine.
+
+In case of Rabbitmq, ingress can be created post which web-ui can be accessed with the same credentials as above.
+
+
+----
+## changelog
+* 28-Apr-2020 Initial commit
+
+----
+## Thanks
+* [tscharts](https://github.com/technosophos/tscharts)
+* [bitnami - Create a Helm chart](https://youtu.be/TJ9hPLn0oAs)

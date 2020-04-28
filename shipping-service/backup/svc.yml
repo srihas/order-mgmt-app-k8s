@@ -1,0 +1,13 @@
+apiVersion: v1
+kind: Service
+metadata:
+  name: shipping-service
+  namespace: kailash
+spec:
+  type: NodePort
+  ports:
+    - port: 9300
+      targetPort: 9300
+      nodePort: 30400
+  selector:
+    app: shipping-service

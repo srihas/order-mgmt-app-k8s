@@ -6,6 +6,7 @@ import java.util.Optional;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.http.HttpEntity;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpMethod;
@@ -46,6 +47,10 @@ public class OrderController {
     private OrderService orderService;
     @Autowired
     private QueueProducer queueProducer;
+
+    @Value("${INVENTORY_SERVICE_URI:http://localhost:9200}")
+    private String inventoryServiceBaseUrl;
+
 
     @GetMapping
     @ApiOperation(value = "Find all orders", notes = "Returns all Orders")
@@ -99,8 +104,6 @@ public class OrderController {
         return Optional.ofNullable(productInventoryResource);
     }
 
-    static final String URL_INVENTORY = "http://inventory-service.kailash.svc.cluster.local:9200/inventory/";
-
     private ProductInventoryResource getInventoryByProductId(long productId) {
         ProductInventoryResource inv = null;
         try {
@@ -108,7 +111,7 @@ public class OrderController {
             headers.setContentType(MediaType.APPLICATION_XML);
             HttpEntity<ProductInventoryResource> entity = new HttpEntity<>(headers);
             RestTemplate restTemplate = new RestTemplate();
-            ResponseEntity<ProductInventoryResource> response = restTemplate.exchange(URL_INVENTORY + productId,
+            ResponseEntity<ProductInventoryResource> response = restTemplate.exchange(inventoryServiceBaseUrl +"/inventory/" + productId,
                     HttpMethod.GET, entity, ProductInventoryResource.class);
             HttpStatus statusCode = response.getStatusCode();
             System.out.println("Response Satus Code: " + statusCode);
@@ -118,11 +121,11 @@ public class OrderController {
                 {
                     try {
                         ShippingMessage message = new ShippingMessage();
-                        message.setAddress("Kailash: Marathahalli, Bangalore");
+                        message.setAddress("Address to be delivered");
                         message.setLocation("Bangalore");
                         queueProducer.produce(message);
                         logger.info(
-                                "Successfully sent the message to delever the product in mentioned address of the user.");
+                                "Successfully sent the message to deliver the product in mentioned address of the user.");
                     } catch (Exception e) {
                         logger.error("error while sending message to shipping service.{}", e.getMessage());
                     }
