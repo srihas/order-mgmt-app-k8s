@@ -21,8 +21,8 @@ This is a sample microservices based application developed in java using Spring 
 ## Usecase:
 
    * User should be able to add the products to Inventory using REST API. (Persist in DB)
-   2. User should be able to take the order based on the product availability in Inventory and generate the invoice using REST API
-   3. Once any invoice is generated post the Order to Shipping service using message broker Rabbit MQ
+   * User should be able to take the order based on the product availability in Inventory and generate the invoice using REST API
+   * Once any invoice is generated post the Order to Shipping service using message broker Rabbit MQ
 ----
 ## Deploying the applications
 
@@ -30,11 +30,15 @@ Create a kubernetes namespace to deploy services:
 
     kubectl create namespace orderapp
 
- Deploy rabbitmq:
+Download helm charts private repo:
+    
+    helm repo add srcharts https://srihas.github.com/charts
+
+Deploy rabbitmq:
  
     helm install rabbitmq srcharts/rabbitmq -n orderapp
 
- Deploy postgres:
+Deploy postgres:
     
     helm install postgresdb srcharts/postgres -n orderapp
 
@@ -55,7 +59,7 @@ Deploy Shipping-service:
 ### Local deployment (Minikube) 
 
     → minikube service list
-|-------------|-------------------|---------------------|--------------------------------|
+
 |  NAMESPACE  |       NAME        |     TARGET PORT     |              URL               |
 |-------------|-------------------|---------------------|--------------------------------|
 | default     | kubernetes        | No node port        |
@@ -66,7 +70,7 @@ Deploy Shipping-service:
 | orderapp    | rabbitmq          | amqp/5672           | http://192.168.99.102:30672    |
 |             |                   | http/15672          | http://192.168.99.102:31672    |
 | orderapp    | shipping-service  | No node port        |
-|-------------|-------------------|---------------------|--------------------------------|
+
 
 ### Service URL's:
 
@@ -101,6 +105,24 @@ The hostname and port details for each service can be obtained from "Service & I
 
 In case of Rabbitmq, ingress can be created post which web-ui can be accessed with the same credentials as above.
 
+----
+## Updating helm charts for order-mgmt-app-k8s services
+
+Untar helm charts from srcharts repo which is added previously (before deployment of services)
+
+    helm pull srcharts/<chart-name> --untar
+
+Update image and tag in values.yaml and before installing perform a dry run to inspect kubernetes descriptor yaml files for correctness
+
+    helm install --dry-run --debug <chart-name> -n <namespace> <chart-dir>
+    * chart-dir is the directory which is untarred previously and has Chart.yaml
+    * e.g. helm install --dry-run --debug inventory-service -n orderapp inventory-service/
+    
+After verifying the yaml content, the chart can be installed by running 
+
+    helm install inventory-service -n orderapp inventory-service/
+    
+Refer to "Verify Status" section for further instructions.
 
 ----
 ## changelog
