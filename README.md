@@ -53,6 +53,11 @@ Deploy Order-service:
 Deploy Shipping-service:
 
     helm install shipping-service srcharts/shipping-service -n orderapp
+    
+
+
+
+> NOTE: Use the same service names as above, else the service discovery does not work, if any changes are required, change the values in corresponding values.yaml in respective charts and install the dependent services.
 
 ----
 ## Verify status 
@@ -89,6 +94,7 @@ Deploy Shipping-service:
 * web-ui: `http://192.168.99.102:31672/`
 * credentials: `guest/guest`
 
+
 #### postgres:
 
 * Credentials:
@@ -97,6 +103,20 @@ Deploy Shipping-service:
 * database: `postgresdb`
 * username: `postgresadmin`
 * password: `admin123`
+
+### Verify sending amqp message to rabbitmq:
+
+Install amqp cli client:
+
+    pip install amqp_client_cli
+    
+Publish message to `messagequeue-exchange`:
+
+    → amqpcli send 192.168.99.102 30672 messagequeue-exchange test -m "Hello there"
+    User: "guest"
+    Password: guest
+    Connecting to queue @ 192.168.99.102:30672... SUCCESS!
+    Message successfully published to exchange [messagequeue-exchange]!
 
 ----
 ### Google Cloud Console
@@ -130,6 +150,7 @@ Refer to "Verify Status" section for further instructions.
 
 ----
 ## Thanks
+* [amqp-client-cli](https://github.com/ownaginatious/amqp-client-cli)
 * [tscharts](https://github.com/technosophos/tscharts)
 * [bitnami - Create a Helm chart](https://youtu.be/TJ9hPLn0oAs)
 * [minikube - loadbalancer](https://blog.codonomics.com/2019/02/loadbalancer-support-with-minikube-for-k8s.html)
