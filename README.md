@@ -76,6 +76,14 @@ Deploy Shipping-service:
 |             |                   | http/15672          | http://192.168.99.102:31672    |
 | orderapp    | shipping-service  | No node port        |
 
+#### Check kubectl entities:
+
+    kubectl get all -n orderapp
+
+> In case of errors in deployment of pod, like ImgPullBack etc:
+
+    kubectl describe pod <pod-container-id>
+
 
 ### Service URL's:
 
