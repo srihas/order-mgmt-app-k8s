@@ -38,6 +38,10 @@ Deploy rabbitmq:
  
     helm install rabbitmq srcharts/rabbitmq -n orderapp
 
+Check deployment status of helm chart:
+
+    helm list -n orderapp
+
 Deploy postgres:
     
     helm install postgresdb srcharts/postgres -n orderapp
@@ -151,6 +155,14 @@ After verifying the yaml content, the chart can be installed by running
     helm install inventory-service -n orderapp inventory-service/
     
 Refer to "Verify Status" section for further instructions.
+
+----
+## Uninstalling helm charts for order-mgmt-app-k8s 
+
+Uninstall helm charts for the services in the reverse order of installation.
+
+     helm uninstall -n orderapp <chart-name>
+
 
 ----
 ## changelog
