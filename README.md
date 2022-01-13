@@ -32,7 +32,7 @@ Create a kubernetes namespace to deploy services:
 
 Download helm charts private repo:
     
-    helm repo add srcharts https://srihas.github.com/charts
+    helm repo add srcharts https://srihas.github.io/charts
 
 Deploy rabbitmq:
  
